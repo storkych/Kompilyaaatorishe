@@ -1,0 +1,2 @@
+C:\Users\Tanya\Desktop\ВУЗ\ТВПиС\ConsoleApplication2\x64\Debug\ConsoleApplication2.exe
+D:\Vs repo\Kompilyaaatorishe\x64\Debug\ConsoleApplication2.exe

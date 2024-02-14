@@ -1,0 +1,8 @@
+﻿  allocator.cpp
+D:\Vs repo\Kompilyaaatorishe\allocator.cpp(111,6): warning C4091: extern : пропускается слева от "allocatorh::Heap", когда ни одна переменная не объявлена
+  ConsoleApplication2.cpp
+D:\Vs repo\Kompilyaaatorishe\allocator.cpp(111,6): warning C4091: extern : пропускается слева от "allocatorh::Heap", когда ни одна переменная не объявлена
+  (компиляция исходного файла "ConsoleApplication2.cpp")
+  
+  Создание кода...
+  ConsoleApplication2.vcxproj -> D:\Vs repo\Kompilyaaatorishe\x64\Debug\ConsoleApplication2.exe
