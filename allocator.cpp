@@ -15,7 +15,7 @@ namespace allocatorh {
     };
 
     // Представляет управление памятью
-    extern class Heap {
+    class Heap {
     private:
         void* memory; // Указатель на память, зарезервированную транслятором (максимальный размер одного блока)
         size_t reservedSize; // Размер памяти, зарезервированный транслятором
@@ -84,7 +84,7 @@ namespace allocatorh {
                     }
                 }
                 count++;
-                if (count == 4) break;
+                if (count == memoryBlocks.size()) break;
             }
         }
 
@@ -109,35 +109,4 @@ namespace allocatorh {
             operator delete(block);
         }
     };
-
-    //int main() {
-
-        //setlocale(LC_ALL, "Russian");
-
-        //Heap heap(1024); // Выделение памяти размером 1024
-
-        //void* block1 = heap.allocate(100); // Выделение блока памяти размером 100
-        //void* block2 = heap.allocate(200); // Выделение блока памяти размером 200
-        //void* block3 = heap.allocate(300); // Выделение блока памяти размером 300
-        //void* block4 = heap.allocate(400); // Выделение блока памяти размером 400
-        //void* block5 = heap.allocate(500); // Выделение блока памяти размером 500
-
-        //heap.printMemoryUsage(); // Вывод информации о памяти
-
-        //heap.free(block2); // Освобождение памяти для блока 2
-        //heap.free(block4); // Освобождение памяти для блока 4
-        //heap.free(block3); // Освобождение памяти для блока 3
-
-        //heap.printMemoryUsage(); // Вывод информации о памяти
-        //void* block6 = heap.allocate(1200); // Выделение блока памяти размером 600 (запрос памяти чуть большего размера, чем можно выделить для одного сегмента)
-
-        //void* block7 = heap.allocate(600); // Выделение блока памяти размером 300
-        //void* block8 = heap.allocate(600); // Выделение блока памяти размером 300
-        //void* block9 = heap.allocate(600); // Выделение блока памяти размером 300
-
-        //heap.printMemoryUsage(); // Вывод информации о памяти
-
-        //return 0;
-    //}
-
-}
+};
