@@ -55,9 +55,13 @@ namespace allocatorh {
                 block = static_cast<char*>(memory) + newBlock.address; // Вернуть указатель на начало нового блока памяти
                 memoryBlocks.push_back(newBlock); // Добавить информацию о новом блоке в вектор memoryBlocks
             }
-            if (size > reservedSize)
-            {
-                cout << "Ошибка выделения памяти" << endl;
+            try {
+                if (size > reservedSize) {
+                    throw "Ошибка выделения памяти";
+                }
+            }
+            catch (const char* errorMessage) {
+                cout << errorMessage << endl;
             }
 
             return block;
