@@ -70,25 +70,34 @@ namespace allocatorh {
         void free(void* block) {
             // Поиск блока памяти по адресу
             // Бежим по элементам вектора (auto - ключевое слово, используемое для определения типа итерируемых элементов)
+            int i = 0; // удаляемый блок 
             for (auto& memoryBlock : memoryBlocks) {
                 if (static_cast<char*>(memory) + memoryBlock.address == block) {
                     memoryBlock.used = false; // Пометить блок памяти как неиспользуемый
+                    cout << "Удаляем элемент: " << i << "  Размер: " << memoryBlocks[i].size << endl;
                     break;
                 }
+                i++;
             }
-            int count = 0;
-            while (true)
-            {
-                for (int i = 1; i < memoryBlocks.size(); i++)
-                {
-                    if (!memoryBlocks[i - 1].used && !memoryBlocks[i].used)
-                    {
-                        memoryBlocks[i - 1].size = memoryBlocks[i - 1].size + memoryBlocks[i].size;
-                        memoryBlocks.erase(memoryBlocks.cbegin() + i);
-                    }
-                }
-                count++;
-                if (count == memoryBlocks.size()) break;
+            // Если элемент не первый, тогда нужна проверка для удаляемого и предыдущего
+            if (i != 0 && !memoryBlocks[i - 1].used) {
+                cout << "Удаляем предыдущий" << endl;
+                // объединяем предыдущий и удаляемый 
+                memoryBlocks[i - 1].size = memoryBlocks[i - 1].size + memoryBlocks[i].size;
+                memoryBlocks.erase(memoryBlocks.cbegin() + i);
+                // i - стал следущим элементом, поэтому возвращаем его на нужный
+                i -= 1;
+            }
+            // Если он не последний (есть следущющий) и следующий свободен
+            if (i != memoryBlocks.size() - 1 && !memoryBlocks[i + 1].used) {
+                cout << "Удаляем следующий" << endl;
+                // объединяем нанешний и следущий 
+                memoryBlocks[i].size = memoryBlocks[i].size + memoryBlocks[i + 1].size;
+                memoryBlocks.erase(memoryBlocks.cbegin() + i + 1);
+            }
+            // Если последний и неиспользуемый
+            if (i == memoryBlocks.size() - 1 && !memoryBlocks[i].used) {
+                memoryBlocks.erase(memoryBlocks.cbegin() + i);
             }
         }
 
