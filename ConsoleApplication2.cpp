@@ -34,6 +34,8 @@ int main()
     void* block7 = heap.allocate(600); // Выделение блока памяти размером 300
     void* block8 = heap.allocate(600); // Выделение блока памяти размером 300
     void* block9 = heap.allocate(600); // Выделение блока памяти размером 300
+    heap.free(block9); // Освобождение памяти для блока 3
+    
 
     heap.printMemoryUsage(); // Вывод информации о памяти
 }

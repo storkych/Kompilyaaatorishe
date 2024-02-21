@@ -33,7 +33,7 @@ namespace allocatorh {
 
         void* allocate(size_t size) {
             void* block = nullptr; // указатель на начало блока памяти
-
+            int i = 0;
             // Поиск свободного блока памяти
             // Бежим по элементам вектора (auto - ключевое слово, используемое для определения типа итерируемых элементов)
             for (auto& memoryBlock : memoryBlocks) {
@@ -44,8 +44,17 @@ namespace allocatorh {
                     // поэтому преобразовываем к char*
                     // начало памяти + смещение удалённого блока
                     block = static_cast<char*>(memory) + memoryBlock.address; // Вернуть указатель на начало блока памяти
+
+                    // Если размер блока больше чем нужно, добавляем пустой блок справа
+                    if (memoryBlock.size > size) {
+                        memoryBlocks.insert(memoryBlocks.begin() + i + 1, { memoryBlock.size - size, false, memoryBlock.address + size });
+                    }
+
+                    // Обновляем размер текущего блока
+                    memoryBlock.size = size;
                     break;
                 }
+                i++;
             }
 
             // Если не удалось найти свободный блок, создаем новый блок памяти
@@ -66,6 +75,7 @@ namespace allocatorh {
 
             return block;
         }
+
 
         void free(void* block) {
             // Поиск блока памяти по адресу
@@ -91,7 +101,7 @@ namespace allocatorh {
             // Если он не последний (есть следущющий) и следующий свободен
             if (i != memoryBlocks.size() - 1 && !memoryBlocks[i + 1].used) {
                 cout << "Удаляем следующий" << endl;
-                // объединяем нанешний и следущий 
+                // объединяем нынешний и следущий 
                 memoryBlocks[i].size = memoryBlocks[i].size + memoryBlocks[i + 1].size;
                 memoryBlocks.erase(memoryBlocks.cbegin() + i + 1);
             }
