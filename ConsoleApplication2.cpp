@@ -15,54 +15,55 @@
 #include <iostream>
 
 class List {
+protected:
+    allocatorh::Heap& heap;
+
 public:
+    List(allocatorh::Heap& _heap) : heap(_heap), front(nullptr) {}
     virtual void push(void* data) = 0;
     virtual void* pop() = 0;
-    virtual void logState() const = 0;
     virtual ~List() {}
+
+    void* front;
+    virtual void logState() {
+        std::cout << "Stack State: " << (front != nullptr ? "Non-empty" : "Empty") << std::endl;
+        heap.printMemoryUsage();
+    }
 };
 
 class Stack : public List {
 private:
-    allocatorh::Heap& heap;
     size_t elementSize;
-    void* top;
 
 public:
-    Stack(allocatorh::Heap& _heap, size_t _elementSize) : heap(_heap), elementSize(_elementSize), top(nullptr) {}
+    Stack(allocatorh::Heap& _heap, size_t _elementSize) : List(_heap), elementSize(_elementSize) {}
 
     void push(void* data) override {
-        top = heap.allocate(elementSize);
-        std::memcpy(top, data, elementSize);
+        front = heap.allocate(elementSize);
+        std::memcpy(front, data, elementSize);
         logState();
     }
 
     void* pop() override {
-        if (top != nullptr) {
+        if (front != nullptr) {
             void* data = heap.allocate(elementSize);
-            std::memcpy(data, top, elementSize);
-            heap.free(top);
-            top = nullptr;
+            std::memcpy(data, front, elementSize);
+            heap.free(front);
+            front = nullptr;
             logState();
             return data;
         }
         return nullptr;
     }
-
-    void logState() const override {
-        std::cout << "Stack State: " << (top != nullptr ? "Non-empty" : "Empty") << std::endl;
-    }
 };
 
 class Queue : public List {
 private:
-    allocatorh::Heap& heap;
     size_t elementSize;
-    void* front;
     void* rear;
 
 public:
-    Queue(allocatorh::Heap& _heap, size_t _elementSize) : heap(_heap), elementSize(_elementSize), front(nullptr), rear(nullptr) {}
+    Queue(allocatorh::Heap& _heap, size_t _elementSize) : List(_heap), elementSize(_elementSize), rear(nullptr) {}
 
     void push(void* data) override {
         if (rear == nullptr) {
@@ -92,21 +93,15 @@ public:
         }
         return nullptr;
     }
-
-    void logState() const override {
-        std::cout << "Queue State: " << (front != nullptr ? "Non-empty" : "Empty") << std::endl;
-    }
 };
 
 class Deque : public List {
 private:
-    allocatorh::Heap& heap;
     size_t elementSize;
-    void* front;
     void* rear;
 
 public:
-    Deque(allocatorh::Heap& _heap, size_t _elementSize) : heap(_heap), elementSize(_elementSize), front(nullptr), rear(nullptr) {}
+    Deque(allocatorh::Heap& _heap, size_t _elementSize) : List(_heap), elementSize(_elementSize), rear(nullptr) {}
 
     void push(void* data) override {
         if (front == nullptr) {
@@ -136,11 +131,8 @@ public:
         }
         return nullptr;
     }
-
-    void logState() const override {
-        std::cout << "Deque State: " << (front != nullptr ? "Non-empty" : "Empty") << std::endl;
-    }
 };
+
 
 int main() {
     setlocale(LC_ALL, "Russian");
@@ -219,7 +211,7 @@ int main() {
     queue.logState();
     deque.logState();
 
-    heap.printMemoryUsage();
+    //heap.printMemoryUsage();
 
     return 0;
 }
